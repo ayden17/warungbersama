@@ -3,6 +3,7 @@
         "index": "index.html",
         "dashboard": "dashboard.html",
         "login": "login.html",
+        "signup": "signup.html",
         "customerview": "customerview.html",
         "customersearch": "customersearch.html",
         "customersMailPrint": "customersMailPrint.html",

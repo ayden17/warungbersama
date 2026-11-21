@@ -1,0 +1,13 @@
+.git
+node_modules
+**/node_modules
+mongodb
+.env
+api/.env
+out
+dist
+builds
+coverage
+*.log
+.wwebjs_auth
+.wwebjs_cache

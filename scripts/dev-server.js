@@ -161,6 +161,7 @@ function startApi() {
       MONGODB_URI: process.env.MONGODB_URI
         || `mongodb://127.0.0.1:${MONGO_PORT}/PosnicPro`,
       NODE_ENV: process.env.NODE_ENV || 'development',
+      WARUNG_SAAS: process.env.WARUNG_SAAS || '1',
     },
   });
   child.on('exit', (code) => {
@@ -173,7 +174,7 @@ function startApi() {
 /* ---------------------------------------------------------------- run it --- */
 
 (async () => {
-  console.log('\nPosnic development server');
+  console.log('\nWarung Bersama development server');
 
   step('Secrets');
   ensureSecrets();
@@ -192,7 +193,8 @@ function startApi() {
   setTimeout(() => {
     console.log('');
     console.log('  ────────────────────────────────────────────────');
-    console.log(`   Posnic is at  http://localhost:${PORT}/public/login.html`);
+    console.log(`   Landing  http://localhost:${PORT}/public/index.html`);
+    console.log(`   Till     http://localhost:${PORT}/public/login.html`);
     console.log('  ────────────────────────────────────────────────');
     console.log('');
     console.log('  First run walks you through setup. Ctrl+C to stop.');

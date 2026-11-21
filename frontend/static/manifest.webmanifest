@@ -1,13 +1,13 @@
 {
-  "name": "Posnic POS",
-  "short_name": "Posnic",
-  "description": "Point of sale, inventory and billing",
+  "name": "Warung Bersama",
+  "short_name": "warungbersama",
+  "description": "Point of sale for warungs, restaurants and small shops",
   "start_url": "../dashboard.html",
   "scope": "../",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#f2f3f7",
-  "theme_color": "#506fe4",
+  "background_color": "#f5f4ee",
+  "theme_color": "#0f3238",
   "icons": [
     {
       "src": "images/icons-pwa/icon-192.png",

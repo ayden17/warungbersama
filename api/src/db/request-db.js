@@ -45,9 +45,18 @@ function connectionFor(req) {
  * without a shop scope must fail closed instead of reading the control database.
  */
 function attachDb(req, res, next) {
-  const connection = connectionFor(req);
-  req.dbConnection = connection;
-  req.db = currentDb(connection && connection.db ? connection.db : undefined);
+  if (req.saasPublic) {
+    req.dbConnection = mongoose.connection;
+    req.db = mongoose.connection.db;
+    return next();
+  }
+  try {
+    const connection = connectionFor(req);
+    req.dbConnection = connection;
+    req.db = currentDb(connection && connection.db ? connection.db : undefined);
+  } catch (error) {
+    return next(error);
+  }
   next();
 }
 

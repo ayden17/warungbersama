@@ -166,7 +166,7 @@ function brandName(app) {
     typeof brand.name === "string" &&
     brand.name.trim()
     ? brand.name.trim()
-    : "Posnic";
+    : "Warung Bersama";
 }
 
 function html(name) {

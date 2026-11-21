@@ -1,23 +1,536 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Posnic POS - Offline POS & Billing Software</title>
-    <meta name="description" content="Posnic POS is offline-first open source POS and billing software for retail stores, restaurants, and small businesses.">
-    <meta name="keywords" content="POS, Billing Software, Offline POS, Online/Offline POS, open source POS">
-    <meta name="robots" content="index, follow">
-    <meta http-equiv="refresh" content="0; url=login.html">
-    <link rel="canonical" href="https://www.posnic.com/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>warungbersama — the till for every warung</title>
+  <meta name="description" content="Warung Bersama is offline-first point of sale for warungs, restaurants, and small shops. Sales, stock, and kitchen tickets keep going when the network does not.">
+  <meta name="theme-color" content="#f5f4ee">
+  <link rel="icon" href="static/images/logo/warungbersama-mark.svg" type="image/svg+xml">
+  <style>
+    @font-face {
+      font-family: "DM Sans";
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+      src: url("static/fonts/dmsans/dmsans-1.woff2") format("woff2");
+    }
+    :root {
+      --page: #f5f4ee;
+      --paper: #ffffff;
+      --ink: #10292d;
+      --muted: #66726f;
+      --rule: #e2e0d6;
+      --deep: #0c2f35;
+      --deep-ink: #eef2ec;
+      --deep-muted: #93aaa6;
+      --gold: #8c7b33;
+      --lilac: #cdc8f6;
+      --lilac-ink: #1e1a44;
+      --accent: #0f3238;
+      --good: #2f7d57;
+      --sans: "DM Sans", "Inter Tight", Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: var(--page);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+    h1, h2, h3, p, ul { margin: 0; padding: 0; }
+    ul { list-style: none; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+    .gold { color: var(--gold); }
+    .wrap { width: min(1200px, calc(100% - 48px)); margin: 0 auto; }
+    .h1 {
+      font-size: clamp(42px, 7.2vw, 88px);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      font-weight: 400;
+      text-align: center;
+    }
+    .h2 {
+      font-size: clamp(30px, 4.4vw, 52px);
+      line-height: 1.04;
+      letter-spacing: -0.035em;
+      font-weight: 400;
+    }
+    .k { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 44px;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-dark { background: var(--accent); color: #fff; }
+    .btn-dark:hover { box-shadow: 0 10px 24px -12px var(--accent); }
+    .btn-lilac { background: var(--lilac); color: var(--lilac-ink); }
+    .btn-ghost { border: 1px solid var(--rule); background: var(--paper); }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      transition: background-color .35s, box-shadow .35s, backdrop-filter .35s;
+    }
+    .nav.scrolled {
+      background: color-mix(in srgb, var(--page) 82%, transparent);
+      backdrop-filter: saturate(1.4) blur(14px);
+      box-shadow: 0 1px 0 var(--rule);
+    }
+    .nav-in {
+      width: min(1200px, calc(100% - 48px));
+      margin: 0 auto;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.03em; }
+    .brand svg { display: block; }
+    .nav-links { display: flex; align-items: center; gap: 4px; flex: 1; }
+    .nav-links a { padding: 8px 10px; border-radius: 8px; font-size: 14px; opacity: .82; }
+    .nav-links a:hover { opacity: 1; background: color-mix(in srgb, var(--ink) 5%, transparent); }
+    .nav-end { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .burger { display: none; width: 40px; height: 40px; border-radius: 10px; }
+    .sheet { display: none; }
+
+    .hero { position: relative; padding: 72px 0 0; overflow: hidden; }
+    .hero-glow {
+      position: absolute; left: 50%; top: 240px; width: min(1100px, 120vw); height: 640px;
+      transform: translateX(-50%);
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--lilac) 70%, transparent), transparent 72%);
+      opacity: .65; pointer-events: none; z-index: 0;
+    }
+    .hero-grid {
+      position: absolute; inset: 0 0 auto 0; height: 560px;
+      background-image: linear-gradient(var(--rule) 1px, transparent 1px), linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+      background-size: 64px 64px;
+      -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 0%, #000 30%, transparent 75%);
+      mask-image: radial-gradient(ellipse 60% 70% at 50% 0%, #000 30%, transparent 75%);
+      opacity: .55; pointer-events: none;
+    }
+    .hero-head { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .hero-text { max-width: 560px; margin-top: 22px; font-size: 17px; color: var(--muted); }
+    .hero-ctas { display: flex; gap: 10px; margin-top: 28px; flex-wrap: wrap; justify-content: center; }
+    .word { display: inline-block; animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+    .word:nth-child(2) { animation-delay: .06s; }
+    .word:nth-child(3) { animation-delay: .12s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+
+    .device-wrap { position: relative; z-index: 1; max-width: 1080px; margin: 64px auto 0; padding: 0 24px; }
+    .bezel {
+      border-radius: 22px; padding: 10px;
+      background: linear-gradient(160deg, #1b1f22, #0b0d0e);
+      box-shadow: 0 1px 0 rgba(255,255,255,.08) inset, 0 50px 100px -40px rgba(16,41,45,.55);
+    }
+    .dash {
+      display: grid; grid-template-columns: 208px 1fr; min-height: 560px;
+      border-radius: 13px; overflow: hidden; background: var(--paper); font-size: 13px;
+    }
+    .side {
+      background: color-mix(in srgb, var(--page) 70%, var(--paper));
+      border-right: 1px solid var(--rule);
+      padding: 16px 10px;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .side-brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 12.5px; padding: 2px 8px 14px; }
+    .side-label { font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); padding: 12px 8px 6px; }
+    .side-item {
+      display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 7px; color: var(--muted);
+    }
+    .side-item.on { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(16,41,45,.08), 0 0 0 1px var(--rule); }
+    .dot { width: 8px; height: 8px; border-radius: 3px; flex: none; }
+    .main { padding: 18px 26px; display: flex; flex-direction: column; }
+    .crumbs { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
+    .crumbs b { color: var(--ink); font-weight: 500; }
+    .live {
+      margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 9px; border-radius: 999px;
+      background: color-mix(in srgb, var(--good) 12%, transparent); color: var(--good); font-size: 11px;
+    }
+    .live i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 1.8s ease-in-out infinite; }
+    @keyframes pulse { 50% { opacity: .25; } }
+    .ov { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; padding-top: 18px; }
+    .total { font-size: clamp(26px, 3.4vw, 38px); letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.15; margin-top: 2px; }
+    .delta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .delta span { color: var(--good); font-weight: 500; }
+    .spark { width: min(280px, 42%); height: 84px; }
+    .accs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
+    .acc {
+      display: flex; flex-direction: column; gap: 3px; text-align: left; padding: 12px;
+      border-radius: 10px; border: 1px solid var(--rule); background: var(--paper);
+    }
+    .acc.on { border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 18%, transparent); }
+    .acc small, .row small { color: var(--muted); }
+    .bal { font-size: 15px; font-variant-numeric: tabular-nums; }
+    .recent { margin-top: 16px; }
+    .recent-head { display: flex; justify-content: space-between; padding-bottom: 6px; font-size: 12.5px; }
+    .row {
+      display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center;
+      padding: 8px 0; border-top: 1px solid var(--rule); font-size: 12px;
+    }
+    .amt { font-variant-numeric: tabular-nums; }
+    .float {
+      position: absolute; right: 8px; top: -18px; width: 280px; padding: 12px; border-radius: 12px;
+      background: var(--deep); color: var(--deep-ink);
+      box-shadow: 0 24px 50px -24px rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.06);
+      font-size: 12px;
+    }
+    .float em { font-style: normal; color: #cbb86a; }
+    .chips { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    .chip { padding: 7px 9px; border-radius: 8px; background: rgba(255,255,255,.07); }
+
+    .sec { padding: 96px 0; }
+    .statement { max-width: 820px; font-size: clamp(26px, 3.4vw, 40px); line-height: 1.15; letter-spacing: -.03em; font-weight: 400; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+    .stat { padding-top: 16px; border-top: 1px solid var(--rule); }
+    .stat b { display: block; font-size: clamp(32px, 4vw, 48px); font-weight: 400; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+    .stat span { color: var(--muted); }
+
+    .features { display: grid; grid-template-columns: 1fr 1.1fr; gap: 48px; align-items: center; }
+    .feat { padding: 18px 0; border-top: 1px solid var(--rule); }
+    .feat h3 { font-size: 18px; font-weight: 500; letter-spacing: -.01em; }
+    .feat p { margin-top: 6px; color: var(--muted); max-width: 420px; }
+    .scene {
+      background: var(--paper); border: 1px solid var(--rule); border-radius: 18px; padding: 22px;
+      box-shadow: 0 30px 60px -40px rgba(16,41,45,.45);
+    }
+    .ticket { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+    .ticket:last-child { border-bottom: 0; }
+    .pill { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: var(--page); color: var(--muted); }
+
+    .faq-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 48px; }
+    .qa { border-top: 1px solid var(--rule); }
+    .qa button { width: 100%; display: flex; justify-content: space-between; gap: 16px; text-align: left; padding: 18px 0; font-size: 17px; }
+    .qa p { display: none; color: var(--muted); padding: 0 32px 18px 0; }
+    .qa.open p { display: block; }
+    .qa .plus { color: var(--gold); font-size: 22px; line-height: 1; }
+
+    .cta-wrap { padding-bottom: 40px; }
+    .cta {
+      position: relative; overflow: hidden; border-radius: 28px; padding: 64px 40px;
+      background: var(--deep); color: var(--deep-ink); text-align: center;
+    }
+    .cta::before {
+      content: ""; position: absolute; inset: auto -10% -40% 20%; height: 280px;
+      background: radial-gradient(closest-side, #c9c3f5, transparent 70%);
+      opacity: .55; pointer-events: none;
+    }
+    .cta h2, .cta p, .cta .hero-ctas { position: relative; }
+    .cta p { max-width: 460px; margin: 16px auto 0; color: var(--deep-muted); }
+    .cta .btn-lilac { margin-top: 28px; }
+
+    footer { padding: 48px 0 0; }
+    .foot-grid { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 24px; padding-bottom: 32px; }
+    .foot-col { display: flex; flex-direction: column; gap: 8px; }
+    .foot-col b { font-weight: 500; margin-bottom: 4px; }
+    .foot-col a { color: var(--muted); font-size: 14px; }
+    .foot-col a:hover { color: var(--ink); }
+    .legal { color: var(--muted); font-size: 12px; max-width: 720px; padding-bottom: 24px; }
+    .bigmark {
+      border-top: 1px solid var(--rule);
+      font-size: clamp(40px, 10vw, 132px);
+      line-height: .85;
+      letter-spacing: -.06em;
+      font-weight: 500;
+      color: color-mix(in srgb, var(--ink) 12%, transparent);
+      padding: 12px 0 8px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .nav-links, .nav-end .btn-ghost { display: none; }
+      .burger { display: grid; place-items: center; }
+      .sheet.open { display: flex; flex-direction: column; gap: 8px; padding: 8px 24px 20px; }
+      .dash { grid-template-columns: 1fr; }
+      .side { display: none; }
+      .float { display: none; }
+      .accs, .stats, .features, .faq-grid, .foot-grid { grid-template-columns: 1fr; }
+      .ov { flex-direction: column; }
+      .spark { width: 100%; }
+      .cta { padding: 40px 20px; }
+    }
+  </style>
 </head>
 <body>
-    <script type="text/javascript">
-        if (window.location.hostname === 'frontend-ace.pages.dev') {
-            window.location.replace("https://www.posnic.com");
-        }
-        window.location.replace("login.html");
-    </script>
-    <noscript><a href="login.html">Open Posnic POS</a></noscript>
+  <header class="nav" id="nav">
+    <div class="nav-in">
+      <a class="brand" href="#top">
+        <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true">
+          <path fill="#8c7b33" d="M8 28 32 8l24 20z"/>
+          <path fill="#0f3238" d="M16 28h6v24h-6zM42 28h6v24h-6zM14 46h36v6H14z"/>
+          <path fill="#0f3238" d="M26 36h12c0 5.2-2.4 8-6 8s-6-2.8-6-8z"/>
+        </svg>
+        warungbersama
+      </a>
+      <nav class="nav-links" aria-label="Page">
+        <a href="#counter">Counter</a>
+        <a href="#why">Why it stays</a>
+        <a href="#floor">On the floor</a>
+        <a href="#questions">Questions</a>
+      </nav>
+      <div class="nav-end">
+        <a class="btn btn-ghost" href="login.html">Log in</a>
+        <a class="btn btn-dark" href="signup.html">Create a shop</a>
+      </div>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 5h12M3 9h12M3 13h12"/></svg>
+      </button>
+    </div>
+    <div class="sheet" id="sheet">
+      <a href="#counter">Counter</a>
+      <a href="#why">Why it stays</a>
+      <a href="#floor">On the floor</a>
+      <a href="#questions">Questions</a>
+      <a href="login.html">Log in</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="wrap hero-head">
+        <h1 class="h1">
+          <span class="word">Every warung,</span><br>
+          <span class="word"><span class="gold">one</span> quiet till.</span>
+        </h1>
+        <p class="hero-text">Sales, stock and kitchen tickets for neighbourhood shops. The counter keeps working when the network does not.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-dark" href="signup.html">Create a shop</a>
+          <a class="btn btn-lilac" href="login.html">Open the till</a>
+        </div>
+      </div>
+
+      <div class="device-wrap" id="counter">
+        <div class="float" aria-hidden="true">
+          <div>Meja 4 · just now</div>
+          <div class="chips">
+            <span class="chip">Nasi goreng</span>
+            <span>→</span>
+            <span class="chip"><em>Settled</em></span>
+          </div>
+        </div>
+        <div class="bezel">
+          <div class="dash">
+            <aside class="side">
+              <div class="side-brand">
+                <svg width="18" height="18" viewBox="0 0 64 64" aria-hidden="true">
+                  <path fill="#8c7b33" d="M8 28 32 8l24 20z"/>
+                  <path fill="#0f3238" d="M16 28h6v24h-6zM42 28h6v24h-6zM14 46h36v6H14z"/>
+                </svg>
+                warungbersama
+              </div>
+              <div class="side-label">Today</div>
+              <div class="side-item on"><span class="dot" style="background:#0f3238"></span> Counter</div>
+              <div class="side-item"><span class="dot" style="background:#a8963f"></span> Tables</div>
+              <div class="side-item"><span class="dot" style="background:#a9a2ee"></span> Takeaway</div>
+              <div class="side-label">House</div>
+              <div class="side-item">Stock</div>
+              <div class="side-item">Kitchen</div>
+              <div class="side-item">Receipts</div>
+            </aside>
+            <div class="main">
+              <div class="crumbs">
+                <span>Warung Melati</span>
+                <span>/</span>
+                <b>Saturday service</b>
+                <span class="live"><i></i> Open</span>
+              </div>
+              <div class="ov">
+                <div>
+                  <div class="k">Takings today</div>
+                  <div class="total">Rp 4.820.000</div>
+                  <div class="delta"><span>+12%</span> against last Saturday</div>
+                </div>
+                <svg class="spark" viewBox="0 0 280 84" aria-hidden="true">
+                  <path d="M0 62 C 30 60, 40 48, 70 50 S 110 28, 140 32 180 18, 210 22 250 8, 280 12" fill="none" stroke="#0f3238" stroke-width="2"/>
+                  <path d="M0 70 C 40 66, 80 58, 120 60 S 180 46, 220 48 260 40, 280 36" fill="none" stroke="#a8963f" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="accs">
+                <div class="acc on">
+                  <span><i class="dot" style="background:#0f3238;display:inline-block"></i> Counter</span>
+                  <b class="bal">Rp 2.140.000</b>
+                  <small>Walk-up · 46 bills</small>
+                </div>
+                <div class="acc">
+                  <span><i class="dot" style="background:#a8963f;display:inline-block"></i> Tables</span>
+                  <b class="bal">Rp 1.860.000</b>
+                  <small>12 open · 3 waiting</small>
+                </div>
+                <div class="acc">
+                  <span><i class="dot" style="background:#a9a2ee;display:inline-block"></i> Takeaway</span>
+                  <b class="bal">Rp 820.000</b>
+                  <small>Bungkus · 19 orders</small>
+                </div>
+              </div>
+              <div class="recent">
+                <div class="recent-head"><b>Latest bills</b><span class="k">Live</span></div>
+                <div class="row"><span>12:41</span><span>Meja 4 · Nasi goreng spesial</span><b class="amt">Rp 48.000</b></div>
+                <div class="row"><span>12:38</span><span>Bungkus · Es teh manis ×2</span><b class="amt">Rp 16.000</b></div>
+                <div class="row"><span>12:33</span><span>Meja 1 · Kopi susu</span><b class="amt">Rp 22.000</b></div>
+                <div class="row"><span>12:29</span><span>Counter · Mie ayam</span><b class="amt">Rp 28.000</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="why">
+      <div class="wrap">
+        <p class="k">Why it stays</p>
+        <p class="statement" style="margin-top:16px">A warung should not need a back office to <span class="gold">keep the day straight.</span> One till remembers the bill, the shelf and the kitchen.</p>
+        <div class="stats">
+          <div class="stat"><b data-count="0" data-to="0">Offline</b><span>Sells with no connection, then catches up</span></div>
+          <div class="stat"><b data-count="1" data-to="1">1 shop</b><span>Counter, tables and takeaway on the same book</span></div>
+          <div class="stat"><b data-count="3" data-to="3">3 slips</b><span>Guest bill, kitchen ticket, end-of-day close</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="floor" style="padding-top:0">
+      <div class="wrap features">
+        <div>
+          <p class="k">On the floor</p>
+          <h2 class="h2" style="margin:12px 0 8px">Built for the rush, not the manual.</h2>
+          <div class="feat">
+            <h3>A counter that stays open</h3>
+            <p>Ring nasi goreng, es teh and the extra telur without waiting on a cloud. The bill is saved on this computer first.</p>
+          </div>
+          <div class="feat">
+            <h3>Stock that matches the shelf</h3>
+            <p>When the last portion of ayam goes out, the count moves with it. Low stock shows up before the lunch queue does.</p>
+          </div>
+          <div class="feat">
+            <h3>A ticket the kitchen can read</h3>
+            <p>Tables and takeaway print a short ticket. The guest gets a bill. Closing the day is one screen, not a notebook.</p>
+          </div>
+        </div>
+        <div class="scene" aria-hidden="true">
+          <div class="k">Kitchen · now</div>
+          <div class="ticket"><div><b>Meja 4</b><div>Nasi goreng spesial · pedas</div></div><span class="pill">Firing</span></div>
+          <div class="ticket"><div><b>Meja 4</b><div>Es teh manis</div></div><span class="pill">Pass</span></div>
+          <div class="ticket"><div><b>Bungkus 19</b><div>Mie ayam · no broth on the side</div></div><span class="pill">Queued</span></div>
+          <div class="ticket"><div><b>Meja 1</b><div>Kopi susu</div></div><span class="pill">Done</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="questions" style="padding-top:0">
+      <div class="wrap faq-grid">
+        <div>
+          <p class="k">Questions</p>
+          <h2 class="h2" style="margin-top:12px">Before you open the till.</h2>
+        </div>
+        <div>
+          <div class="qa open">
+            <button type="button">Does it need the internet? <span class="plus">–</span></button>
+            <p>No. Sales, stock and receipts run on this computer. A connection is only for sharing with another till or a later backup.</p>
+          </div>
+          <div class="qa">
+            <button type="button">Can two people sell at once? <span class="plus">+</span></button>
+            <p>Yes. Each register signs in on its own. The shop still has one set of items, one stock count and one day’s takings.</p>
+          </div>
+          <div class="qa">
+            <button type="button">What comes out of the printer? <span class="plus">+</span></button>
+            <p>A guest bill, a kitchen ticket, and the close. The name on the paper is the shop’s, with the warungbersama mark only where you choose to show it.</p>
+          </div>
+          <div class="qa">
+            <button type="button">How do I try it here? <span class="plus">+</span></button>
+            <p>Create a shop with your email. That opens your own till, separate from every other shop on this server. Then log in.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap cta-wrap">
+      <section class="cta">
+        <h2 class="h2">Open your warung<br>on <span class="gold">this</span> computer.</h2>
+        <p>Create an account for your shop. Sales, stock and staff stay in that shop alone.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-lilac" href="signup.html">Create a shop</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <a class="brand" href="#top">
+          <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true">
+            <path fill="#8c7b33" d="M8 28 32 8l24 20z"/>
+            <path fill="#0f3238" d="M16 28h6v24h-6zM42 28h6v24h-6zM14 46h36v6H14z"/>
+          </svg>
+          warungbersama
+        </a>
+        <div class="foot-col">
+          <b>Till</b>
+          <a href="signup.html">Create a shop</a>
+          <a href="login.html">Log in</a>
+          <a href="#counter">Today’s counter</a>
+        </div>
+        <div class="foot-col">
+          <b>Floor</b>
+          <a href="#floor">Counter</a>
+          <a href="#floor">Stock</a>
+          <a href="#floor">Kitchen</a>
+        </div>
+        <div class="foot-col">
+          <b>House</b>
+          <a href="#questions">Questions</a>
+          <a href="#why">Why it stays</a>
+        </div>
+      </div>
+      <p class="legal">warungbersama is point-of-sale software for warungs and small shops. Figures on this page are a picture of a Saturday service, not a live till.</p>
+      <div class="bigmark" aria-hidden="true">warungbersama</div>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById("nav");
+    const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const burger = document.getElementById("burger");
+    const sheet = document.getElementById("sheet");
+    burger.addEventListener("click", () => {
+      const open = sheet.classList.toggle("open");
+      burger.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    sheet.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+      sheet.classList.remove("open");
+      burger.setAttribute("aria-expanded", "false");
+    }));
+
+    document.querySelectorAll(".qa button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const qa = btn.parentElement;
+        const open = qa.classList.toggle("open");
+        btn.querySelector(".plus").textContent = open ? "–" : "+";
+      });
+    });
+  </script>
 </body>
 </html>

@@ -56,11 +56,11 @@
 
 :root {
     /* Primary Colors */
-    --theme-primary-color: #506fe4;
-    --theme-primary-hover: #3f5cd6;
+    --theme-primary-color: #0f3238;
+    --theme-primary-hover: #164148;
     
     /* Background Colors */
-    --theme-body-bg: #f2f3f7;
+    --theme-body-bg: #f5f4ee;
     --theme-card-bg: #ffffff;
     --theme-sidebar-bg: #ffffff;
     --theme-topbar-bg: #ffffff;

@@ -963,6 +963,7 @@ app.use('/uploads', require('./src/routes/uploads.route'));
 // lgtm[js/missing-token-validation] csrfProtect below validates the reflected,
 // credential-bound X-XSRF-TOKEN for every cookie-authenticated unsafe request.
 app.use(cookieParser());
+app.use(require('./src/saas/scope').scope);
 
 // Session configuration
 app.use(
@@ -1110,7 +1111,10 @@ app.use(attachDb);
  * fetched itself; see src/realtime/ for both halves.
  */
 const { changeEvents } = require('./src/realtime/change-events');
-const { subscribe: sseSubscribe, closeAll: closeEventStreams } = require('./src/realtime/event-bus');
+const {
+  subscribe: sseSubscribe,
+  closeAll: closeEventStreams,
+} = require('./src/realtime/event-bus');
 process.once('posnic:api-shutdown', closeEventStreams);
 const { protect: sseProtect } = require('./src/middleware/auth');
 app.use(changeEvents);
@@ -1129,10 +1133,21 @@ app.use(
 app.use(['/api/captain/v1', '/captain/v1'], require('./src/routes/captain-access.routes'));
 app.use('/api/kitchen', require('./src/routes/kitchen-board.routes'));
 app.get(/^\/kitchen$/, (_req, res) => res.redirect('/kitchen/'));
-const kitchenLocaleFiles = fs.readdirSync(path.join(__dirname, 'src', 'kitchen-board', 'locales'))
+const kitchenLocaleFiles = fs
+  .readdirSync(path.join(__dirname, 'src', 'kitchen-board', 'locales'))
   .filter((file) => /^(?:index|[a-z]{2}(?:-[A-Z]{2})?)\.json$/.test(file))
   .map((file) => 'locales/' + file);
-for (const file of ['index.html', 'board.js', 'board.css', 'device.js', 'i18n.js', 'manifest.webmanifest', 'sw.js', 'icon.svg', ...kitchenLocaleFiles]) {
+for (const file of [
+  'index.html',
+  'board.js',
+  'board.css',
+  'device.js',
+  'i18n.js',
+  'manifest.webmanifest',
+  'sw.js',
+  'icon.svg',
+  ...kitchenLocaleFiles,
+]) {
   app.get(
     file === 'index.html' ? ['/kitchen/', '/kitchen/index.html'] : '/kitchen/' + file,
     (_req, res) => {
@@ -1148,14 +1163,18 @@ for (const extension of ['html', 'js', 'css']) {
   const suffix = extension === 'html' ? '' : '.' + extension;
   app.get(['/api/captain-setup' + suffix, '/captain-setup' + suffix], (req, res) => {
     res.set('Cache-Control', 'no-store');
-    res.sendFile(require('path').join(__dirname, 'src/routes/captain-setup.' + extension), {dotfiles:'allow'});
+    res.sendFile(require('path').join(__dirname, 'src/routes/captain-setup.' + extension), {
+      dotfiles: 'allow',
+    });
   });
 }
 for (const extension of ['html', 'js', 'css']) {
   const suffix = extension === 'html' ? '' : '.' + extension;
   app.get(['/api/mobile-pos-setup' + suffix, '/mobile-pos-setup' + suffix], (req, res) => {
     res.set('Cache-Control', 'no-store');
-    res.sendFile('mobile-pos-setup.' + extension, { root: require('path').join(__dirname, 'src/routes') });
+    res.sendFile('mobile-pos-setup.' + extension, {
+      root: require('path').join(__dirname, 'src/routes'),
+    });
   });
 }
 
@@ -1536,6 +1555,7 @@ app.post(['/push/test', '/api/push/test'], sseProtect, async (req, res) => {
 });
 
 // Mount API routes under /api
+app.use('/api/saas', require('./src/routes/saas.routes'));
 app.use('/api', apiRouter);
 
 // Root API endpoint - provides basic API info and prevents 404 on /api

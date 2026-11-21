@@ -125,15 +125,15 @@
 
         /* What the shop reads out, shortest useful form first. */
         headline: function (v) {
-            if (v.app) { return 'Posnic ' + v.app; }
-            if (v.server) { return 'Posnic ' + v.server; }
-            return 'Posnic';
+            if (v.app) { return 'Warung Bersama ' + v.app; }
+            if (v.server) { return 'Warung Bersama ' + v.server; }
+            return 'Warung Bersama';
         },
 
         /* What lands in the clipboard: one line, every number, labelled. */
         line: function (v) {
             var bits = [];
-            bits.push('Posnic ' + (v.app || v.server || '?'));
+            bits.push('Warung Bersama ' + (v.app || v.server || '?'));
             bits.push(v.app ? 'desktop' : 'browser');
             if (v.page) { bits.push('page ' + v.page); }
             if (v.server) { bits.push('server ' + v.server); }
