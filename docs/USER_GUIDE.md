@@ -373,11 +373,11 @@ business. Details at [posnic.com](https://www.posnic.com).
 database process more often than anything else. If it persists, the log will say
 why:
 
-| System  | Log                                            |
-| ------- | ---------------------------------------------- |
-| Windows | `%APPDATA%\posnic\app.log`                     |
-| macOS   | `~/Library/Application Support/posnic/app.log` |
-| Linux   | `~/.config/posnic/app.log`                     |
+| System  | Log                                                   |
+| ------- | ----------------------------------------------------- |
+| Windows | `%APPDATA%\warungbersama\app.log`                     |
+| macOS   | `~/Library/Application Support/warungbersama/app.log` |
+| Linux   | `~/.config/warungbersama/app.log`                     |
 
 **"MongoDB service not running."** Posnic's database did not start. Restart the
 application; if it happens again, restart the machine and check the log.

@@ -198,6 +198,10 @@
       "description": "Mounted at /roles"
     },
     {
+      "name": "Saas",
+      "description": "Mounted at /saas"
+    },
+    {
       "name": "Sales",
       "description": "Mounted at /sales"
     },
@@ -15539,6 +15543,29 @@
         }
       }
     },
+    "/purchaseOrders/history": {
+      "get": {
+        "summary": "history",
+        "operationId": "get_purchaseOrders_history",
+        "tags": [
+          "Purchase orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
     "/purchaseOrders/{id}": {
       "get": {
         "summary": "getById",
@@ -17813,6 +17840,53 @@
               "type": "string"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/saas/signup": {
+      "post": {
+        "summary": "signup",
+        "operationId": "post_saas_signup",
+        "tags": [
+          "Saas"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "description": "Request body is not yet documented. This endpoint has no validation middleware, so its shape cannot be derived from the source. Adding validation improves both runtime safety and this document."
+      }
+    },
+    "/saas/whoami": {
+      "get": {
+        "summary": "whoami",
+        "operationId": "get_saas_whoami",
+        "tags": [
+          "Saas"
         ],
         "responses": {
           "200": {

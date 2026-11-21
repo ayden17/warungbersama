@@ -593,6 +593,9 @@
   "Coupons": [
     "src/services/coupon.service.js"
   ],
+  "Create a shop before using the till.": [
+    "src/saas/scope.js"
+  ],
   "Credentials are never copied between branches": [
     "src/repositories/settings.repository.js"
   ],
@@ -1105,6 +1108,9 @@
   "Invalid invoice id": [
     "src/repositories/invoice.repository.js"
   ],
+  "Invalid item": [
+    "src/repositories/item.repository.js"
+  ],
   "Invalid loyalty tier": [
     "src/services/customer.service.js"
   ],
@@ -1431,6 +1437,9 @@
   ],
   "No shop in context": [
     "app.js"
+  ],
+  "No shop is registered for that email. Create one first.": [
+    "src/saas/scope.js"
   ],
   "No such branch in this shop": [
     "src/models/setting.model.js"
@@ -2385,6 +2394,12 @@
   "The shop has turned this phone off. Sign in again to use it.": [
     "src/middleware/auth.js"
   ],
+  "The shop list is unavailable.": [
+    "src/saas/scope.js"
+  ],
+  "The two passwords do not match.": [
+    "src/routes/saas.routes.js"
+  ],
   "The user belonging to this token no longer exists.": [
     "src/controllers/auth.controller.js"
   ],
@@ -2946,6 +2961,9 @@
   ],
   "Your session security token is missing or expired. Refresh and try again.": [
     "src/middleware/csrf.js"
+  ],
+  "Your shop is ready.": [
+    "src/routes/saas.routes.js"
   ],
   "Your token has expired! Please log in again.": [
     "src/controllers/auth.controller.js"

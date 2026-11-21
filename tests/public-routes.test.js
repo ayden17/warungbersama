@@ -206,6 +206,11 @@ const ALLOWED_ANONYMOUS = {
     // till, which is backwards: pairing is what happens before anyone can.
     '/',
   ],
+  'saas.routes.js': [
+    // A new shop has no session yet. Signup creates that shop's database and
+    // writes the shop cookie. whoami returns only the name on that cookie.
+    '/signup', '/whoami',
+  ],
   'base.routes.js': [
     // Liveness only. "/" says it is running; "/health" reports status, time and
     // uptime to a stranger and keeps the version, platform and memory figures

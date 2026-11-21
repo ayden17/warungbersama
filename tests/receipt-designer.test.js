@@ -1411,7 +1411,7 @@ test('custom footer text saves, reloads and renders safely on every paper size',
     assert.equal($('<div>').html(engine.render(sale, '80', false)).find('.rd-branding').length, 0);
     saved.showBranding = true;
     saved.brandingText = '   ';
-    assert.equal($('<div>').html(engine.render(sale, '80', false)).find('.rd-branding').text(), 'Made with Posnic · posnic.com');
+    assert.equal($('<div>').html(engine.render(sale, '80', false)).find('.rd-branding').text(), 'warungbersama');
     assert.throws(() => contract.normalize({ ...saved, brandingText: 'x'.repeat(201) }), /200 characters/);
     assert.throws(() => contract.normalize({ ...saved, brandingText: {} }), /200 characters/);
     dom.window.close();

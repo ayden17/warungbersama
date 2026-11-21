@@ -30,7 +30,7 @@ for (const [digits, amount, expected] of [[0, 95, '95'], [2, 31.67, '31.67'], [3
         Object.assign(win.PosnicPro.sales, { mountHistoryFilters() {}, mountProvenanceHistory() {}, paintHistoryFilters() {}, renderHistoryPager() {}, HIST_PAGE_SIZE: 25 });
         win.PosnicPro.sales.loadHistory(1);
         const cells = win.document.querySelectorAll('#sales_list_rows tbody td');
-        assert.equal(cells[4].textContent, 'Currency\u00a0' + expected);
+        assert.equal(cells[5].textContent, 'Currency\u00a0' + expected);
         dom.window.close();
     });
 }

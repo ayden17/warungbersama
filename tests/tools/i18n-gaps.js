@@ -24,7 +24,8 @@ const { JSDOM } = require('jsdom');
 const FE = path.resolve(__dirname, '..', '..', 'frontend');
 const SKIP_FILE = [/^modules[\\/]report_gstr/, /^error-\d+\.html$/, /^error-email\.html$/,
   /^customersMailPrint\.html$/,
-  /^index\.html$/];                 // a redirect stub for search engines, as in i18n-tag.js
+  /^index\.html$/,                 // a public landing page, English by design
+  /^signup\.html$/];                // the pre-auth shop form, English by design
 /* Their <title> is a published contract pinned by frontend-discovery-files. */
 const SEO_TITLE_PAGE = /^(index|login)\.html$/;
 const SKIP_TEXT = /^[\s\d.,:;!?()\[\]{}%$₹#*+\-–—/|&'"«»…=<>_×]*$/;

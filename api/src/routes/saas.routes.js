@@ -7,7 +7,7 @@ const { COOKIE } = require('../saas/scope');
 
 const router = express.Router();
 
-router.post('/signup', async (req, res) => {
+async function signup(req, res) {
   try {
     const body = req.body || {};
     if (body.password !== body.passwordConfirm) {
@@ -47,15 +47,19 @@ router.post('/signup', async (req, res) => {
       data: null,
     });
   }
-});
+}
 
-router.get('/whoami', async (req, res) => {
+router.post('/signup', signup);
+
+async function whoami(req, res) {
   const slug = req.cookies && req.cookies[COOKIE];
   const shop = slug ? await registry.findBySlug(slug) : null;
   res.json({
     type: 'success',
     data: shop ? { slug: shop.slug, shopName: shop.shopName, email: shop.email } : null,
   });
-});
+}
+
+router.get('/whoami', whoami);
 
 module.exports = router;

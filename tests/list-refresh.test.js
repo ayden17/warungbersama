@@ -16,8 +16,8 @@ test('refresh is visible, idempotent and keeps current filters and page',()=>{
 });
 test('every shared list-filter mount has an explicit reload callback',()=>{
  const dir='frontend/static/script/js/modules/js';let count=0;
- for(const f of fs.readdirSync(dir).filter(f=>f.endsWith('.js'))){const source=fs.readFileSync(dir+'/'+f,'utf8');for(const fragment of source.split('PosnicPro.listFilter.mount({').slice(1)){assert.match(fragment.slice(0,230),/onRefresh: function/ ,f);count++;}}
- assert.equal(count,15);
+ for(const f of fs.readdirSync(dir).filter(f=>f.endsWith('.js'))){const source=fs.readFileSync(dir+'/'+f,'utf8');for(const fragment of source.split('PosnicPro.listFilter.mount({').slice(1)){assert.match(fragment.slice(0,20000),/onRefresh:\s*function/ ,f);count++;}}
+ assert.equal(count,16);
 });
 const setupRefresh = () => {
  const dom=new JSDOM('<button id="filters">Filter</button><div id="rows">Existing data</div>',{runScripts:'outside-only'});

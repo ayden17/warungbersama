@@ -3,7 +3,7 @@
   "version": "1.9.2",
   "description": "Warung Bersama is offline-first point-of-sale software for warungs, restaurants, and small shops.",
   "main": "src/main.js",
-  "desktopName": "com.warungbersama.app.desktop",
+  "desktopName": "com.posnic.app.desktop",
   "scripts": {
     "postinstall": "node scripts/enable-installer-extraction-details.js",
     "prepare": "husky",

@@ -93,7 +93,7 @@ test('the storage step merges rather than replaces', () => {
 
   /* Named parts, so a rewrite that loses one of them reads as itself. */
   assert.match(run, /cp -p "\$env" "\$env\.bak"/, 'no backup is taken before the write');
-  assert.match(run, /sed -i "\/\^\$k=\/d" "\$merged"/, 'the incoming keys are not de-duplicated');
+  assert.match(run, /grep -v "\^\$\{k\}=" "\$merged" > "\$merged\.next"/, 'the incoming keys are not de-duplicated');
   assert.match(run, /mv "\$merged" "\$env"/, 'the merged file is not moved into place in one step');
   assert.match(run, /chmod 600 "\$env"/, 'the .env is left readable by other users');
 });

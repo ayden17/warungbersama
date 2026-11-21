@@ -75,14 +75,14 @@ test("saved cloud branding takes precedence; a newer installer replaces an old s
   );
   assert.equal(
     render({ seed, cached: { enabled: false, version: 3 } }).options.title,
-    "Posnic",
+    "Warung Bersama",
   );
 });
 test("missing or corrupt descriptors do not prevent ordinary startup", () => {
-  assert.equal(render().options.title, "Posnic");
+  assert.equal(render().options.title, "Warung Bersama");
   assert.equal(
     render({ seed: "{broken", cached: "{broken" }).options.title,
-    "Posnic",
+    "Warung Bersama",
   );
 });
 test("brand names are rendered as text, not HTML", () => {

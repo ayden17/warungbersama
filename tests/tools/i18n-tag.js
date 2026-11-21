@@ -30,9 +30,9 @@ const SKIP_FILE = [
   /^modules[\\/]report_gstr/,      // Indian statutory tables: column names are the form's own
   /^error-\d+\.html$/, /^error-email\.html$/,  // server error pages, template boilerplate
   /^customersMailPrint\.html$/,    // an email body the API fills
-  /^index\.html$/,                 // a redirect stub for search engines: loads no script,
-                                   // so a tag here would never be translated, and its
+  /^index\.html$/,                 // a public landing page: English by design, and its
                                    // <title> is a published contract
+  /^signup\.html$/,                // the pre-auth shop form, English by design
 ];
 const ATTRS = ['placeholder', 'title', 'aria-label'];
 /* Pages a search engine reads directly. Their <title> is a published

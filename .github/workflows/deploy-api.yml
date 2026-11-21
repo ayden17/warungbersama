@@ -153,7 +153,8 @@ jobs:
                cp -p "$env" "$env.bak"
                cp "$env" "$merged"
                for k in $(sed -n "s/^\([A-Za-z_][A-Za-z0-9_]*\)=.*/\1/p" "$incoming"); do
-                 sed -i "/^$k=/d" "$merged"
+                 grep -v "^${k}=" "$merged" > "$merged.next" || true
+                 mv "$merged.next" "$merged"
                done
              fi
              cat "$incoming" >> "$merged"

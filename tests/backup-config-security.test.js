@@ -43,7 +43,7 @@ test('OS-selected destination and ordinary schedule persist without losing inter
   assert.equal(m.loadConfig().lastBackup, 'previous');
   const restarted = new BackupManager({ userDataPath: root });
   restarted.saveConfig({ path: selected, enabled: false });
-  assert.equal(restarted.loadConfig().path, selected);
+  assert.equal(restarted.loadConfig().path, fs.realpathSync(selected));
 });
 test('delete protects root and unrelated data; deletes only a backup child', (t) => {
   const { m } = fixture(t);

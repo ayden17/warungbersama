@@ -5,7 +5,7 @@
  *
  * The browser is on one address for every customer. The shop is chosen by the
  * cookie written at signup, or by the email on a sign-in. Pages that exist
- * before an account — the landing page, the sign-up form — are served with
+ * before an account, the landing page and the sign-up form, are served with
  * no shop in scope.
  */
 

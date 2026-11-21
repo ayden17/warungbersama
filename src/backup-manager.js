@@ -92,10 +92,13 @@ class BackupManager {
     if ('path' in next) {
       if (typeof next.path !== 'string' || !path.isAbsolute(next.path)) throw new Error('Choose a backup folder using Browse');
       const current = path.resolve(this.loadConfig().path);
-      if (path.resolve(next.path) !== current) {
-        const selected = fs.existsSync(next.path) && fs.realpathSync(next.path);
-        if (!selected || !this._grantedBackupPaths?.has(selected)) throw new Error('Choose a backup folder using Browse');
+      const selected = fs.existsSync(next.path) ? fs.realpathSync(next.path) : path.resolve(next.path);
+      const currentReal = fs.existsSync(current) ? fs.realpathSync(current) : current;
+      if (selected !== currentReal) {
+        if (!this._grantedBackupPaths?.has(selected)) throw new Error('Choose a backup folder using Browse');
         next.path = selected;
+      } else {
+        next.path = currentReal;
       }
     }
     return this._saveConfig(next);

@@ -23,7 +23,7 @@
 
   <launchable type="desktop-id">com.posnic.app.desktop</launchable>
   <provides>
-    <binary>posnic</binary>
+    <binary>warungbersama</binary>
   </provides>
 
   <url type="homepage">https://www.posnic.com/</url>

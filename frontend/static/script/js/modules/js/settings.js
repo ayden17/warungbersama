@@ -8982,6 +8982,7 @@ PosnicPro.salesChannels = {
                shop that actually holds orders. */
             PosnicPro.local.set('online_order_approval', approval);
             PosnicPro.applyOrderQueueVisibility();
+            self._loaded = true;
         }, function () {
             /* A shop that has never saved these has nothing stored yet, which
                is not an error. Draw the till, which every shop has. */
