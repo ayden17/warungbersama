@@ -26,6 +26,14 @@ const { JSDOM } = require('jsdom');
 const ROOT = path.join(__dirname, '..');
 const read = (...p) => fs.readFileSync(path.join(ROOT, ...p), 'utf8');
 const WATCH = ['frontend', 'static', 'script', 'js', 'core', 'online-order-watch.js'];
+const openTills = [];
+
+/* The watcher polls every 20s. Leaving that timer running keeps the test
+   process alive after the assertions have finished, and the pre-push check
+   never returns. */
+test.afterEach(() => {
+  while (openTills.length) openTills.pop().stop();
+});
 
 /**
  * The shell, with a sidebar and a PosnicPro that answers with one queue.
@@ -46,6 +54,13 @@ function till({ queue = [], ringing = [], fails = false } = {}) {
   let answer = queue;
   /* The calls ride in their own key, the way the server sends them. */
   let calling = ringing;
+  const intervalIds = [];
+  const nativeSetInterval = window.setInterval.bind(window);
+  window.setInterval = (fn, ms, ...args) => {
+    const id = nativeSetInterval(fn, ms, ...args);
+    intervalIds.push(id);
+    return id;
+  };
   window.PosnicPro = {
     i18n: { t: (key, fallback) => fallback },
     get(_request, ok, no) {
@@ -61,6 +76,13 @@ function till({ queue = [], ringing = [], fails = false } = {}) {
   /* The file defers its first look to DOMContentLoaded when the document is
      still parsing, which is where jsdom is at this point. */
   window.document.dispatchEvent(new window.Event('DOMContentLoaded'));
+  const held = {
+    stop() {
+      intervalIds.forEach((id) => window.clearInterval(id));
+      window.close();
+    },
+  };
+  openTills.push(held);
   return {
     window,
     document: window.document,
@@ -394,7 +416,7 @@ test('a call is NOT counted on the Online orders menu, because it is not on that
   assert.match(queue, /var list = \(response && response\.data\) \|\| \[\];/);
   assert.match(
     queue,
-    /\$\('#onlineorders_list'\)\.html\(list\.map\(self\.card\)\.join\(''\)\)/,
+    /\$\('#onlineorders_list'\)\.html\(visible\.map\(this\.card\)\.join\(''\)\)/,
     'the queue page now draws something other than the orders'
   );
   floor.window.close();
