@@ -9,6 +9,8 @@ ENV PUPPETEER_SKIP_DOWNLOAD=true \
 COPY api api
 RUN cd api && npm ci --omit=dev
 
+COPY scripts/lib/translation-encoding.js scripts/lib/translation-encoding.js
+COPY languages languages
 COPY frontend frontend
 RUN cd frontend && npm ci && npx gulp build && rm -rf node_modules
 
